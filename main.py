@@ -29,9 +29,26 @@ def generate_matrix(N, a1, a2, a3):
 
     return A, b
 
+def method_comparison(N, a1, a2, a3):
+    A, b = generate_matrix(N, a1, a2, a3)
+
+    start_time = time.time()
+    x_jacobi, _ = solve_jacobi(A, b)
+    jacobi_time = time.time() - start_time
+
+    start_time = time.time()
+    x_gauss_seidel, _ = solve_gauss_seidel(A, b)
+    gauss_seidel_time = time.time() - start_time
+
+    start_time = time.time()
+    x_LU, _ = solve_LU(A, b)
+    LU_time = time.time() - start_time
+
+    return jacobi_time, gauss_seidel_time, LU_time
+
 
 def main():
-    #zadanie A
+    # #zadanie A
     N = 9 * 100 + c * 10 + d
     a1 = 5 + e
     a2 = a3 = -1
@@ -101,6 +118,31 @@ def main():
     print("Time for Jacobi:", jacobi_time)
     print("Time for Gauss-Seidel:", gauss_seidel_time)
     print("Time for LU:", LU_time)
+
+
+
+    N_values = [100, 500, 1000, 2000, 3000]
+    a1 = 5 + e
+    a2 = a3 = -1
+    jacobi_times = []
+    gauss_seidel_times = []
+    LU_times = []
+
+    for N in N_values:
+        jacobi_time, gauss_seidel_time, LU_time = method_comparison(N, a1, a2, a3)
+        jacobi_times.append(jacobi_time)
+        gauss_seidel_times.append(gauss_seidel_time)
+        LU_times.append(LU_time)
+
+    plt.plot(N_values, jacobi_times, label='Jacobi')
+    plt.plot(N_values, gauss_seidel_times, label='Gauss-Seidel')
+    plt.plot(N_values, LU_times, label='LU')
+    plt.xlabel('Matrix size (N)')
+    plt.ylabel('Time (seconds)')
+    plt.title('Execution Time')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 
 main()
